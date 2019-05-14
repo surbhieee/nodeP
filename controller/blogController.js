@@ -36,13 +36,13 @@ let getAllBlog = (req, res) => {
  */
 let createBlog = (req, res) => {
     var today = Date.now()
-    let blogId = 2;
-
+    console.log(req.body);
+//console.log(req.body.title);
     let newBlog = new BlogModel({
-
-        blogId: ++blogId,
-        title: "abc",
-        description: "abc",
+        
+        blogId: req.body.blogId,
+        title: req.body.title,
+        description: req.body.description
         // bodyHtml: req.body.blogBody,
         // isPublished: true,
         // category: req.body.category,
@@ -65,10 +65,44 @@ let createBlog = (req, res) => {
     }) // end new blog save
 }
 
+let editBlog = (req, res)=>{
+console.log(req.body);
+BlogModel.update({'blogId': req.body.blogId}, req.body).exec((err, result) => {
 
+        if (err) {
+            console.log(err)
+            res.send(err)
+        } else if (result == undefined || result == null || result == '') {
+            console.log('No Blog Found')
+            res.send("No Blog Found")
+        } else {
+            res.send(result)
+
+        }
+    })
+
+}
+
+let deleteBlog = (req, res)=>{
+    console.log(req.body);
+    BlogModel.remove({'blogId':req.body.blogId}, (err, result) => {
+        if (err) {
+            console.log(err)
+            res.send(err)
+        } else if (result == undefined || result == null || result == '') {
+            console.log('No Blog Found')
+            res.send("No Blog Found")
+        } else {
+            res.send(result)
+
+        }
+    })
+}
 
 
 module.exports = {
     getAllBlog: getAllBlog,
-    createBlog: createBlog
+    createBlog: createBlog,
+    editBlog: editBlog,
+    deleteBlog: deleteBlog
 }
